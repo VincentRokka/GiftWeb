@@ -14,6 +14,10 @@ File này hướng dẫn Claude Code (claude.ai/code) khi làm việc với code
 
 Không có linter, formatter hay test.
 
+## Git
+
+Repo: https://github.com/VincentRokka/GiftWeb (public, nhánh `main`). Chỉ commit/push khi người dùng yêu cầu. `.gitignore` bỏ qua `node_modules`, `dist`, `*.zip` (file backup `ToanhWeb.zip` chỉ để trên máy) và file tạm Office `~$*`.
+
 ## Kiến trúc
 
 **Toàn bộ nội dung nằm ở `src/content.js`.** Chữ, đường dẫn ảnh, mục menu, thời gian loader (`loaderCycles`, `loaderFrameMs`) và cấu hình luồng Lucky (`luckyFlow`) đều ở đây; component import từ file này chứ không hardcode chữ. Muốn đổi câu chữ, ảnh, hay thêm/đổi tên trang tính năng thì sửa `content.js` trước. Ảnh nằm trong `public/images/`, gọi bằng đường dẫn tuyệt đối (`/images/...`); đổi ảnh = thay file cùng tên (`loader/01-03.png`, `gallery/01-08.png`, `gif/01-04.gif`, `pages/01-05.png`, `logo-dark.png` / `logo-light.png`).
@@ -52,4 +56,5 @@ Các bước (`step` trong `LuckyFlow`):
 - 2026-11-11: Màn 06 bước 2 (`shelf`): hover 4 tên trên bệ → hiện bảng mô tả theo mẫu `06_display.png`; thêm nút "Quay lại" (về 07) và "Về trang chủ" ở góc trái trên. Bước `intro` không đổi. Dịch CLAUDE.md sang tiếng Việt.
 - 2026-11-12: Màn 06 bước 2: click 1 trong 4 khung → gif tương ứng chạy 1 lần tới tờ giấy cuối → hiện lời nhắn random (1/5) theo option đã chọn ở 07. Thêm `src/lib/playOnceGif.js`, `luckyFlow.messages`, `luckyFlow.shelf[].gif`.
 - 2026-11-12: Đổi nút thành "Back" / "Home", xếp Home dưới Back, hạ xuống ngang mép trên khung 01. Chữ mô tả trong bảng hover đậm hơn (font-weight 300 → 400).
+- 2026-11-12: Tạo git, đẩy lên GitHub repo `GiftWeb`.
 - Đang chờ: người dùng sẽ gửi các bước tiếp theo của luồng Lucky (có thể dùng `luckyChoice`).
