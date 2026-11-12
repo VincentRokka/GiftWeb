@@ -1,0 +1,100 @@
+.loader {
+  --mark: clamp(52px, 6.4vh, 76px);
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  background: #f0f0f0;
+  opacity: 1;
+  transition: opacity 900ms ease;
+}
+
+.loader.is-leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.lockup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: flex-start;
+  gap: calc(var(--mark) * 0.22);
+  transform: translate(-50%, -50%);
+}
+
+.frame {
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--mark);
+  height: var(--mark);
+  background: #1c1c1c;
+  overflow: hidden;
+}
+
+.frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 200ms linear;
+  user-select: none;
+}
+
+.frame img.is-active {
+  opacity: 1;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: var(--mark);
+  padding-top: 1px;
+  color: #1c1c1c;
+}
+
+.lines p,
+.caption {
+  margin: 0;
+  font-size: calc(var(--mark) * 0.145);
+  font-weight: 500;
+  line-height: 1.22;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.caption {
+  color: #c2c2c2;
+  font-weight: 500;
+}
+
+.track {
+  position: absolute;
+  bottom: 8.2%;
+  left: 50%;
+  width: clamp(96px, 13.2vw, 200px);
+  height: 1px;
+  background: #e3e3e3;
+  transform: translateX(-50%);
+}
+
+.track-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #8a8a8a;
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader,
+  .frame img {
+    transition: none;
+  }
+}

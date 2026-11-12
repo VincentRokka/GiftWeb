@@ -1,0 +1,373 @@
+.lucky {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  overflow: hidden;
+}
+
+/* 06 — full-bleed, zooms out from the centre of the viewport on first show */
+.lucky-intro {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  transform-origin: 50% 50%;
+}
+
+.lucky-intro.is-zooming {
+  animation: lucky-zoom var(--lucky-zoom-ms) cubic-bezier(0.65, 0, 0.25, 1) both;
+}
+
+/* same size as object-fit: cover of the 06 art, centred — children use % of the image */
+.lucky-intro-stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100vw, 100vh * var(--lucky-intro-aspect));
+  aspect-ratio: var(--lucky-intro-aspect);
+  transform: translate(-50%, -50%);
+  container-type: inline-size;
+}
+
+.lucky-intro-stage > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  user-select: none;
+}
+
+/* ---- 06 step 2 ("shelf"): hover the plaque name → info panel (mock: gallery/06_display.png) ---- */
+.lucky-shelf-frame {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  border-radius: 0.4cqw;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.lucky-shelf-frame:focus-visible {
+  outline: 2px solid #ffc700;
+  outline-offset: 2px;
+}
+
+.lucky-shelf-frame.is-opening {
+  cursor: progress;
+}
+
+/* the name on the plaque, as a % of the glass frame */
+.lucky-shelf-hotspot {
+  position: absolute;
+  left: 28%;
+  top: 76%;
+  width: 44%;
+  height: 13%;
+  z-index: 2;
+}
+
+.lucky-shelf-panel {
+  position: absolute;
+  left: 19%;
+  top: 2%;
+  width: 63%;
+  height: 93%;
+  padding: 3.2cqw 1.9cqw 0;
+  border-radius: 0.55cqw;
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: #1c1c1c;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 0.84cqw;
+  line-height: 1.28;
+  overflow: hidden;
+  pointer-events: none; /* panel covers the hotspot — keep hover on the hotspot */
+  z-index: 3;
+  opacity: 0;
+  transform: translateY(0.4cqw);
+  transition:
+    opacity 260ms ease,
+    transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lucky-shelf-frame.is-active .lucky-shelf-panel {
+  opacity: 1;
+  transform: none;
+}
+
+.lucky-shelf-title {
+  display: block;
+  width: fit-content;
+  min-width: 63%;
+  margin: 0 0 1.75cqw;
+  padding: 0.5cqw 0.6cqw;
+  border-radius: 0.3cqw;
+  background: #ffc700;
+  color: #111;
+  font-size: 1.12cqw;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.lucky-shelf-text {
+  display: block;
+  margin: 0 0 1.05cqw;
+}
+
+/* ---- gif step: the frame's gif plays once (cover), then the message fades in on the blank paper ---- */
+.lucky-reveal {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: #f6ead9;
+  animation: lucky-fade-in var(--lucky-fade-ms) ease both;
+}
+
+.lucky-reveal-gif {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  user-select: none;
+}
+
+.lucky-reveal-note {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 2.4vh, 28px);
+  padding: 96px clamp(24px, 8vw, 120px);
+  text-align: center;
+  pointer-events: none;
+}
+
+.lucky-reveal-kicker {
+  color: var(--lucky-hover);
+  font-family: "Nunito", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 800;
+  font-size: clamp(12px, 1vw, 15px);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  animation: lucky-note-in 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.lucky-reveal-message {
+  max-width: 28em;
+  margin: 0;
+  color: #3b2412;
+  font-family: "Homemade Apple", cursive;
+  font-size: clamp(20px, 2.3vw, 36px);
+  line-height: 1.75;
+  text-wrap: balance;
+  animation: lucky-note-in 900ms 120ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes lucky-note-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* back / home buttons — left side, Home under Back; top edge lines up with the top of frame 01
+   (stage height = max(100vh, 100vw / aspect), centred, so frame top = 50vh - h * (0.5 - frameTop)) */
+.lucky-nav {
+  position: absolute;
+  top: max(
+    16px,
+    calc(50vh - max(100vh, 100vw / var(--lucky-intro-aspect)) * (0.5 - var(--lucky-nav-frame-top)))
+  );
+  left: 24px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  animation: lucky-fade-in var(--lucky-fade-ms) ease both;
+}
+
+.lucky-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: #1c1c1c;
+  font: 500 14px/1 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  cursor: pointer;
+  transition: background 200ms ease, color 200ms ease;
+}
+
+.lucky-nav-btn:hover,
+.lucky-nav-btn:focus-visible {
+  background: #ffc700;
+  color: #111;
+}
+
+.lucky-nav-btn:focus-visible {
+  outline: 2px solid #1c1c1c;
+  outline-offset: 2px;
+}
+
+@keyframes lucky-zoom {
+  from {
+    transform: scale(0.04);
+    opacity: 0;
+    border-radius: 24px;
+  }
+  15% {
+    opacity: 1;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+    border-radius: 0;
+  }
+}
+
+/* 07 — menu art is letterboxed (contain) so all six cells stay visible */
+.lucky-menu {
+  position: absolute;
+  inset: 0;
+  background: var(--lucky-menu-bg);
+  animation: lucky-fade-in var(--lucky-fade-ms) ease both;
+}
+
+.lucky-menu.is-leaving {
+  animation: lucky-fade-out var(--lucky-fade-ms) ease both;
+  pointer-events: none;
+}
+
+@keyframes lucky-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes lucky-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.lucky-menu-stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(100vw, 100vh * var(--lucky-aspect));
+  aspect-ratio: var(--lucky-aspect);
+  transform: translate(-50%, -50%);
+  container-type: inline-size;
+}
+
+.lucky-menu-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  user-select: none;
+}
+
+.lucky-option {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.lucky-option::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--lucky-hover);
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.lucky-option-label,
+.lucky-option-icon {
+  position: absolute;
+  opacity: 0;
+  transition:
+    opacity 240ms ease,
+    transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.lucky-option-label {
+  color: var(--lucky-hover-text);
+  font-family: "Nunito", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 800;
+  font-size: 1.62cqw;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  transform: translate(0, -50%);
+}
+
+.lucky-option-label.is-right {
+  transform: translate(-100%, -50%);
+}
+
+.lucky-option-icon {
+  width: 31%;
+  height: auto;
+  transform: translate(-50%, -50%) scale(0.86) rotate(-12deg);
+}
+
+.lucky-option:hover::before,
+.lucky-option:focus-visible::before,
+.lucky-option:hover .lucky-option-label,
+.lucky-option:focus-visible .lucky-option-label {
+  opacity: 1;
+}
+
+.lucky-option:hover .lucky-option-icon,
+.lucky-option:focus-visible .lucky-option-icon {
+  opacity: 0.62;
+  transform: translate(-50%, -50%) scale(1) rotate(0deg);
+}
+
+.lucky-option:focus-visible {
+  outline: 2px solid var(--lucky-hover);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lucky-intro.is-zooming,
+  .lucky-menu,
+  .lucky-menu.is-leaving,
+  .lucky-nav,
+  .lucky-reveal,
+  .lucky-reveal-kicker,
+  .lucky-reveal-message {
+    animation: none;
+  }
+
+  .lucky-shelf-panel {
+    transition: none;
+  }
+}
